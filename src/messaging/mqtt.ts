@@ -30,11 +30,15 @@ export function sendMqttMessage(link: Link, store: Store) {
     logger.debug('↗ sending mqtt message');
 
     (async () => {
-      const givenUrl = link.cartUrl ? link.cartUrl : link.url;
       const message = `{"msg":"${Print.inStock(
         link,
         store
-      )}", "url":"${givenUrl}"}`;
+      )}",
+        "title":"${link.brand.toUpperCase} ${link.series.toUpperCase} ${link.model.toUpperCase}",
+        "direct-link":"${link.cartUrl}",
+        "link":"${link.url}",
+        "price": "${link.price}"
+      }`;
       const topic = generateTopic(link, store, mqtt.topic);
       const pubOptions: IClientPublishOptions = {
         qos: mqtt.qos as 0 | 1 | 2,
